@@ -26,7 +26,7 @@ This project was built using a strictly native, framework-free architecture. It 
 I am actively open to cybersecurity internships, SOC operations roles, research collaboration, and freelance web development contracts.
 
 * **LinkedIn:** [Alex Asuma](https://www.linkedin.com/in/alex-asuma-903444340)
-* **Email:** asumaalex346@gmail.com
+* **Email:** alexasuma.dev@gmail.com
 * **WhatsApp:** [Direct Message](https://wa.me/254726855096)
 
 ---
