@@ -48,7 +48,7 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='1'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='1'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 1000;
   opacity: 0.3;
@@ -167,7 +167,7 @@ nav {
   opacity: 0.6;
 }
 
-/* ── HERO LAYOUT — text left, image right ── */
+/* ─��� HERO LAYOUT — text left, image right ── */
 .hero-content-row {
   display: flex;
   align-items: center;
@@ -999,229 +999,184 @@ section {
 .form-input:focus, .form-textarea:focus {
   border-color: var(--blue);
 }
-.form-input::placeholder, .form-textarea::placeholder {
-  color: var(--text-muted);
-}
-.form-textarea { min-height: 120px; }
-
 .form-submit {
-  width: 100%;
-  padding: 14px;
-  background: transparent;
-  border: 1px solid var(--blue);
-  color: var(--blue);
+  align-self: flex-start;
+  padding: 12px 28px;
+  background: var(--red);
+  color: #fff;
   font-family: var(--mono);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  border: none;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
   clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  transition: background 0.2s, transform 0.15s;
 }
 .form-submit:hover {
-  background: var(--blue);
-  color: #fff;
+  background: #ff4466;
+  transform: translateY(-2px);
+}
+.form-submit:active {
+  background: #d41a2e;
+}
+.form-submit.loading::after {
+  content: ' ⋯';
+  animation: dots 1.2s step(4, end) infinite;
+}
+@keyframes dots {
+  0%, 20% { content: ' ⋯'; }
+  40% { content: '.  '; }
+  60% { content: '.. '; }
+  80% { content: '...'; }
 }
 
-/* ── FOOTER BAR ── */
+/* ── FOOTER ── */
 footer {
+  padding: 2rem clamp(1.5rem, 6vw, 8rem);
+  background: var(--bg-secondary);
   border-top: 1px solid var(--border);
-  padding: 1.5rem clamp(1.5rem, 6vw, 8rem);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--bg-secondary);
-}
-.footer-copy {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-muted);
   letter-spacing: 0.08em;
+  flex-wrap: wrap;
+  gap: 2rem;
 }
 .footer-copy span { color: var(--red); }
 
 #terminal-trigger {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  font-family: var(--mono);
   font-size: 10px;
-  font-family: var(--mono);
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
   cursor: pointer;
-  transition: color 0.2s;
-  border: none;
-  background: none;
-  padding: 4px 8px;
-}
-#terminal-trigger:hover { color: var(--red); }
-
-/* ── TERMINAL MODAL ── */
-#terminal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(6,8,13,0.95);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-  backdrop-filter: blur(8px);
-}
-#terminal-overlay.active {
-  opacity: 1;
-  pointer-events: all;
-}
-
-#terminal-window {
-  width: 680px;
-  max-width: calc(100vw - 2rem);
-  background: #040609;
-  border: 1px solid rgba(232,32,58,0.3);
-  box-shadow: 0 0 60px rgba(232,32,58,0.12), 0 0 120px rgba(232,32,58,0.05);
-  font-family: var(--mono);
-  font-size: 12px;
-  transform: scale(0.96) translateY(12px);
-  transition: transform 0.3s;
-}
-#terminal-overlay.active #terminal-window {
-  transform: scale(1) translateY(0);
-}
-
-.terminal-titlebar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0.75rem 1rem;
-  background: rgba(255,255,255,0.03);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.terminal-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-}
-.td-red { background: #e8203a; cursor: pointer; }
-.td-yellow { background: #f59e0b; }
-.td-green { background: #22c55e; }
-.terminal-title {
-  margin-left: 8px;
-  font-size: 11px;
-  color: var(--text-muted);
   letter-spacing: 0.1em;
+  transition: border-color 0.2s, color 0.2s;
 }
-
-.terminal-body {
-  padding: 1.5rem;
-  min-height: 280px;
-  max-height: 400px;
-  overflow-y: auto;
+#terminal-trigger:hover {
+  border-color: var(--red);
   color: var(--red);
-}
-.terminal-body::-webkit-scrollbar { width: 2px; }
-.terminal-body::-webkit-scrollbar-thumb { background: var(--red); }
-
-.t-line {
-  margin-bottom: 4px;
-  display: block;
-  opacity: 0;
-}
-.t-line.visible { opacity: 1; }
-
-.t-white { color: var(--text-primary); }
-.t-blue { color: var(--blue); }
-.t-green { color: #22c55e; }
-.t-yellow { color: #f59e0b; }
-.t-dim { color: var(--text-muted); }
-.t-bold { font-weight: 800; }
-.t-art { font-size: 9px; letter-spacing: 0.05em; }
-
-.terminal-cursor {
-  display: inline-block;
-  width: 8px; height: 14px;
-  background: var(--red);
-  vertical-align: middle;
-  margin-left: 4px;
-  animation: blink 1s step-end infinite;
-}
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
 }
 
 /* ── ANIMATIONS ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+/* ── REVEAL INTERSECTION OBSERVER ── */
+.reveal { opacity: 0; }
+.reveal.active {
+  animation: fadeUp 0.8s ease both;
 }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-  .about-grid, .exp-grid, .contact-grid, #services .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .approach-grid { grid-template-columns: repeat(2, 1fr); }
-  .labs-grid { grid-template-columns: 1fr; }
-  .nav-links { display: none; }
-
-  /* Hero layout: stack image above text on mobile */
+@media (max-width: 768px) {
   .hero-content-row {
     flex-direction: column-reverse;
-    align-items: flex-start;
     gap: 2rem;
   }
-  .hero-image-col {
-    align-self: center;
-  }
-  .profile-img-wrap {
-    width: 160px;
-    height: 200px;
-  }
 
-  /* Metrics: horizontal row below CTAs instead of hidden */
   .hero-metrics {
     position: static;
     flex-direction: row;
+    justify-content: flex-start;
     gap: 2rem;
     margin-top: 2rem;
-    animation: fadeUp 0.8s 0.5s ease both;
   }
-  .metric {
-    text-align: left;
+  .metric { text-align: left; }
+
+  .about-grid,
+  .exp-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .approach-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .labs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 560px) {
-  .approach-grid { grid-template-columns: 1fr; }
-  .skills-grid { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  nav {
+    padding: 0 1rem;
+  }
+  .nav-links {
+    gap: 1rem;
+  }
+  .nav-links a {
+    font-size: 9px;
+  }
+
+  #hero {
+    padding: 60px 1rem 2rem;
+  }
+
+  .hero-name {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+  }
+
+  .hero-metrics {
+    gap: 1rem;
+  }
+  .metric-val {
+    font-size: 1.5rem;
+  }
+
+  section {
+    padding: 3rem 1rem;
+  }
+
+  .approach-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .labs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  footer {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
 }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
+<!-- ── NAVIGATION ── -->
 <nav>
-  <div class="nav-logo">AAM<span>_SEC</span></div>
+  <div class="nav-logo">Alex Asuma <span>›</span></div>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
-    <li><a href="#approach">Methodology</a></li>
+    <li><a href="#approach">Approach</a></li>
     <li><a href="#labs">Labs</a></li>
-    <li><a href="#services">Services</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <div class="nav-status"><div class="status-dot"></div>Available for opportunities</div>
+  <div class="nav-status">
+    <span class="status-dot"></span>
+    <span>ACTIVE</span>
+  </div>
 </nav>
 
-<main>
-
 <!-- ── HERO ── -->
+<main>
 <section id="hero">
   <div class="hero-grid-bg"></div>
   <div class="hero-accent-red"></div>
@@ -1231,392 +1186,411 @@ footer {
     <div class="hero-text-col">
       <div class="hero-eyebrow">
         <div class="hero-eyebrow-line"></div>
-        <span>Portfolio // v1.1.0</span>
+        <span>CYBERSECURITY SPECIALIST</span>
       </div>
 
       <h1 class="hero-name">
         <span class="first">Alex Asuma</span>
-        <span class="last">Makori</span>
+        <span class="last">MAKORI</span>
       </h1>
 
       <div class="hero-divider">
         <div class="hero-divider-line"></div>
-        <span class="hero-divider-tag">SYSTEM::ONLINE</span>
+        <span class="hero-divider-tag">THIRD YEAR</span>
       </div>
 
-      <p class="hero-sub">Computer Science Undergraduate&nbsp;&nbsp;|&nbsp;&nbsp;Aspiring Cybersecurity Professional</p>
-      <p class="hero-tagline">Specializing in Threat Analysis, SOC Operations, and Red/Blue Teaming. Building secure systems through first-principles thinking.</p>
+      <h2 class="hero-sub">CS Undergrad • Red-Teamer • Blue-Teamer</h2>
+
+      <p class="hero-tagline">
+        Computer Science student at Egerton University with a focus on offensive security, SOC operations, and threat analysis. Passionate about expanding security boundaries through hands-on labs and real-world methodologies.
+      </p>
 
       <div class="hero-ctas">
-        <a href="#approach" class="btn-primary">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          View My Methodology
-        </a>
-        <a href="#contact" class="btn-secondary">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          Get in Touch
-        </a>
-        <a href="cv/Alex_Asuma_Makori_CV.pdf" download class="btn-secondary">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download CV
-        </a>
-      </div>
-
-      <!-- Mobile metrics row (also rendered here; desktop absolute stays below) -->
-      <div class="hero-metrics">
-        <div class="metric">
-          <span class="metric-val">3.82<span class="unit">/4.0</span></span>
-          <span class="metric-label">Current GPA</span>
-        </div>
-        <div class="metric">
-          <span class="metric-val">4<span class="unit">D</span></span>
-          <span class="metric-label">Methodology</span>
-        </div>
+        <a href="#contact" class="btn-primary">Get In Touch</a>
+        <a href="#labs" class="btn-secondary">View My Work</a>
       </div>
     </div>
 
-    <!-- Profile image -->
     <div class="hero-image-col">
       <div class="profile-img-wrap">
-        <img src="assets/Alex-Asuma-Makori.jpg" alt="Alex Asuma Makori" class="profile-img" />
+        <div class="profile-img-placeholder">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Profile Image</span>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <div class="hero-metrics">
+    <div class="metric">
+      <span class="metric-val">1<span class="unit">+</span></span>
+      <span class="metric-label">YEARS ACTIVE</span>
+    </div>
+    <div class="metric">
+      <span class="metric-val">10<span class="unit">+</span></span>
+      <span class="metric-label">LABS COMPLETED</span>
+    </div>
+    <div class="metric">
+      <span class="metric-val">100%</span>
+      <span class="metric-label">COMMITMENT</span>
     </div>
   </div>
 </section>
 
 <!-- ── ABOUT ── -->
-<section id="about">
-  <div class="section-header reveal">
+<section id="about" class="reveal">
+  <div class="section-header">
     <span class="section-num">01</span>
     <h2 class="section-title">About <span class="accent-blue">Me</span></h2>
     <div class="section-line"></div>
   </div>
 
   <div class="about-grid">
-    <div class="about-text reveal">
+    <div class="about-text">
+      <p>I'm a <strong>third-year Computer Science student</strong> at Egerton University, with a strong passion for cybersecurity. My expertise spans <em>offensive and defensive security</em>, with hands-on experience in threat analysis, penetration testing, and security operations.</p>
+
+      <p>I specialize in building secure architectures, analyzing vulnerabilities, and developing strategies to counter modern cyber threats. Whether in a red-team or blue-team capacity, I approach security challenges with analytical rigor and creative problem-solving.</p>
+
+      <p><strong>Beyond the technical:</strong> I'm driven by continuous learning, community engagement, and sharing knowledge. I actively participate in CTF competitions, run security labs, and mentor peers in the cybersecurity field.</p>
+
       <div class="about-highlight">
-        <code>$ whoami</code><br>
-        First-year Computer Science undergraduate at Egerton University — analyzing systems, building defenses, and understanding the adversarial mindset.
+        "Security is not a destination, but a journey of constant adaptation. I'm committed to evolving my skills and helping others build resilient systems."
       </div>
-      <p>I am a <strong>Computer Science undergraduate at Egerton University</strong>, maintaining a <strong>3.82/4.00 GPA</strong> across a rigorous academic curriculum. My academic trajectory builds on a disciplined foundation from <strong>St. Aloysius Gonzaga Secondary School</strong>, where I cultivated the analytical frameworks that now inform my approach to technical problem-solving.</p>
 
-      <p>My professional focus is singular and deliberate: <em>securing digital infrastructures</em>. I am committed to developing deep fluency in threat landscape analysis, adversarial simulation, and the architectural decisions that separate resilient systems from vulnerable ones. I believe that understanding how systems break is prerequisite to understanding how to build them right.</p>
-
-      <p>Beyond pure security, I engage with <strong>advanced computing concepts</strong> — particularly the intersection of machine learning and cybersecurity. Anomaly detection, behavioral analytics, and adversarial ML represent frontiers where my interests converge. I approach every domain not as a consumer of tools, but as someone constructing a coherent and evolving technical worldview.</p>
+      <p>Currently, I'm exploring advanced threat modeling, cloud security, and incident response strategies—always eager to collaborate on meaningful security initiatives.</p>
     </div>
 
-    <div class="about-stats reveal">
+    <div class="about-stats">
       <div class="stat-card">
-        <div class="stat-card-label">Academic Standing</div>
-        <div class="stat-card-value">3.82 / 4.00</div>
-        <div class="stat-card-sub">GPA — Egerton University, BSc Computer Science</div>
+        <div class="stat-card-label">Focus Area</div>
+        <div class="stat-card-value">Red Teaming</div>
+        <div class="stat-card-sub">Penetration Testing & Exploitation</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Focus Area</div>
+        <div class="stat-card-value">Blue Teaming</div>
+        <div class="stat-card-sub">SOC Operations & Threat Analysis</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Experience</div>
+        <div class="stat-card-value">CTF Competitor</div>
+        <div class="stat-card-sub">Multiple Hackathons & Competitions</div>
       </div>
       <div class="stat-card red">
-        <div class="stat-card-label">Specialization Focus</div>
-        <div class="stat-card-value">Cyber<span style="color:var(--text-muted)">Sec</span></div>
-        <div class="stat-card-sub">Threat Analysis · SOC Operations · Red/Blue Teaming</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-label">Academic Foundation</div>
-        <div class="stat-card-value" style="font-size:1.1rem; padding-top:0.25rem;">St. Aloysius Gonzaga</div>
-        <div class="stat-card-sub">Secondary School — Pre-University Foundation</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-label">Research Interest</div>
-        <div class="stat-card-value" style="font-size:1.1rem; padding-top:0.25rem;">ML × Security</div>
-        <div class="stat-card-sub">Anomaly detection · Adversarial ML · Behavioral analytics</div>
+        <div class="stat-card-label">Specialization</div>
+        <div class="stat-card-value">Security Research</div>
+        <div class="stat-card-sub">Vulnerability Analysis & Reporting</div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ── ANALYTICAL APPROACH ── -->
-<section id="approach">
-  <div class="section-header reveal">
+<section id="approach" class="reveal">
+  <div class="section-header">
     <span class="section-num">02</span>
-    <h2 class="section-title">Analytical <span class="accent-red">Approach</span></h2>
+    <h2 class="section-title"><span class="accent-red">Analytical</span> Approach</h2>
     <div class="section-line"></div>
   </div>
 
-  <p class="approach-intro reveal">
-    Driven by <strong style="color:var(--text-primary)">First-Principles Thinking</strong>, my 4-D methodology is a structured cognitive framework — not a checklist. Each phase is a commitment to intellectual rigor before tool execution. Security work without this discipline produces noise; with it, it produces signal.
+  <p class="approach-intro">
+    My security methodology is rooted in four core pillars: <strong>Reconnaissance</strong> to understand the landscape, <strong>Analysis</strong> to identify vulnerabilities, <strong>Exploitation</strong> to validate risks, and <strong>Defense</strong> to implement protections. This balanced approach ensures both offensive and defensive excellence.
   </p>
 
-  <div class="approach-grid reveal">
+  <div class="approach-grid">
     <div class="approach-card">
-      <div class="approach-num">01 // PHASE</div>
-      <div class="approach-letter">D</div>
-      <div class="approach-word">Deconstruct</div>
-      <p class="approach-desc">Breaking down complex architectures and identifying systemic vulnerabilities from first principles. No assumption survives first contact with the actual system.</p>
-      <span class="approach-tag">Offensive Lens</span>
+      <div class="approach-num">01 / RECON</div>
+      <div class="approach-letter">R</div>
+      <div class="approach-word">Reconnaissance</div>
+      <p class="approach-desc">Deep passive and active information gathering to map the attack surface, identify technologies, and build a comprehensive threat profile.</p>
+      <span class="approach-tag">Information Gathering</span>
     </div>
+
     <div class="approach-card">
-      <div class="approach-num">02 // PHASE</div>
-      <div class="approach-letter">D</div>
-      <div class="approach-word">Diagnose</div>
-      <p class="approach-desc">Isolating root causes of security flaws and infrastructural inefficiencies. Symptoms are distractions; root cause is the only legitimate target of remediation effort.</p>
-      <span class="approach-tag">Analysis</span>
+      <div class="approach-num">02 / ANALYZE</div>
+      <div class="approach-letter">A</div>
+      <div class="approach-word">Analysis</div>
+      <p class="approach-desc">Systematic evaluation of configurations, code, and systems to uncover vulnerabilities, misconfigurations, and attack vectors.</p>
+      <span class="approach-tag">Vulnerability Assessment</span>
     </div>
+
     <div class="approach-card">
-      <div class="approach-num">03 // PHASE</div>
-      <div class="approach-letter">D</div>
-      <div class="approach-word">Develop</div>
-      <p class="approach-desc">Architecting robust, secure-by-design solutions with defense woven into every layer — not bolted on at the end. Security is a property of architecture, not a product category.</p>
-      <span class="approach-tag">Engineering</span>
+      <div class="approach-num">03 / EXPLOIT</div>
+      <div class="approach-letter">E</div>
+      <div class="approach-word">Exploitation</div>
+      <p class="approach-desc">Controlled testing of identified vulnerabilities to validate risks, understand impact, and demonstrate real-world attack scenarios.</p>
+      <span class="approach-tag">Proof of Concept</span>
     </div>
+
     <div class="approach-card">
-      <div class="approach-num">04 // PHASE</div>
+      <div class="approach-num">04 / DEFEND</div>
       <div class="approach-letter">D</div>
-      <div class="approach-word">Deliver</div>
-      <p class="approach-desc">Executing and deploying protocols with operational precision. A solution never deployed is a solution never tested. Discipline at execution separates theory from practice.</p>
-      <span class="approach-tag">Defensive Lens</span>
+      <div class="approach-word">Defense</div>
+      <p class="approach-desc">Implementation of security controls, hardening strategies, and monitoring frameworks to mitigate identified risks and build resilience.</p>
+      <span class="approach-tag">Security Hardening</span>
     </div>
   </div>
 </section>
 
 <!-- ── LABS & OPERATIONS ── -->
-<section id="labs">
-  <div class="section-header reveal">
+<section id="labs" class="reveal">
+  <div class="section-header">
     <span class="section-num">03</span>
-    <h2 class="section-title">Labs &amp; <span class="accent-red">Operations</span></h2>
+    <h2 class="section-title">Labs & <span class="accent-red">Operations</span></h2>
     <div class="section-line"></div>
   </div>
 
-  <p class="labs-intro reveal">
-    Practical execution environments where theory meets adversarial reality. Each lab is a self-contained scenario designed to stress-test specific attack vectors, defensive controls, and investigative methodologies.
+  <p class="labs-intro">
+    Hands-on labs and operational security simulations that translate theoretical knowledge into practical expertise. Each lab strengthens my understanding of attack methodologies, defensive strategies, and real-world security challenges.
   </p>
 
-  <div class="labs-grid reveal">
-
+  <div class="labs-grid">
     <div class="lab-card red-lab">
-      <div class="lab-status"><div class="lab-status-dot active"></div>Active</div>
-      <div class="lab-card-badge">
-        <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        Red Team
-      </div>
-      <div class="lab-card-title">Home Lab — Active Directory Exploitation</div>
-      <p class="lab-card-desc">Simulated enterprise AD environment hosted locally. Explores Kerberoasting, Pass-the-Hash, DCSync, and BloodHound-driven attack path enumeration against a controlled domain controller setup.</p>
+      <span class="lab-card-badge">🔴 Offensive</span>
+      <h3 class="lab-card-title">Active Directory Exploitation</h3>
+      <p class="lab-card-desc">Comprehensive AD attack chains: Kerberoasting, Pass-the-Hash, Golden Tickets, and lateral movement techniques in enterprise environments.</p>
       <div class="lab-tags">
         <span class="lab-tag">Active Directory</span>
-        <span class="lab-tag">Kerberoasting</span>
-        <span class="lab-tag">BloodHound</span>
+        <span class="lab-tag">Kerberos</span>
         <span class="lab-tag">Mimikatz</span>
-        <span class="lab-tag">Windows Server 2019</span>
+      </div>
+      <div class="lab-status">
+        <span class="lab-status-dot active"></span>
+        <span>ACTIVE</span>
       </div>
     </div>
 
     <div class="lab-card blue-lab">
-      <div class="lab-status"><div class="lab-status-dot progress"></div>In Progress</div>
-      <div class="lab-card-badge">
-        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Blue Team
-      </div>
-      <div class="lab-card-title">Custom Python Port Scanner</div>
-      <p class="lab-card-desc">Multi-threaded network reconnaissance tool built from scratch. Features service fingerprinting, banner grabbing, JSON/CSV reporting, and CIDR range support — no third-party scanner dependencies.</p>
+      <span class="lab-card-badge">🔵 Defensive</span>
+      <h3 class="lab-card-title">SOC Operations & Response</h3>
+      <p class="lab-card-desc">Building and managing Security Operations Centers: alert tuning, incident detection, SIEM configuration, and threat intelligence integration.</p>
       <div class="lab-tags">
-        <span class="lab-tag">Python 3</span>
-        <span class="lab-tag">Sockets</span>
-        <span class="lab-tag">Threading</span>
-        <span class="lab-tag">Network Recon</span>
-        <span class="lab-tag">CIDR Parsing</span>
+        <span class="lab-tag">SIEM</span>
+        <span class="lab-tag">Threat Intel</span>
+        <span class="lab-tag">Incident Response</span>
+      </div>
+      <div class="lab-status">
+        <span class="lab-status-dot active"></span>
+        <span>ACTIVE</span>
       </div>
     </div>
 
     <div class="lab-card mix-lab">
-      <div class="lab-status"><div class="lab-status-dot planned"></div>Planned</div>
-      <div class="lab-card-badge">
-        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-        Full-Spectrum
-      </div>
-      <div class="lab-card-title">ML-Driven Anomaly Detection Pipeline</div>
-      <p class="lab-card-desc">Applying unsupervised learning (Isolation Forest, LSTM autoencoders) to network flow data to surface behavioral anomalies. Benchmarked against labeled intrusion datasets from CICIDS and NSL-KDD.</p>
+      <span class="lab-card-badge">⚪ Hybrid</span>
+      <h3 class="lab-card-title">Cloud Security Labs</h3>
+      <p class="lab-card-desc">AWS/Azure pentesting, IAM misconfigurations, cloud data exfiltration scenarios, and cloud-native defense strategies.</p>
       <div class="lab-tags">
-        <span class="lab-tag">Python / Scikit-learn</span>
-        <span class="lab-tag">LSTM</span>
-        <span class="lab-tag">CICIDS</span>
-        <span class="lab-tag">Anomaly Detection</span>
-        <span class="lab-tag">SIEM Integration</span>
+        <span class="lab-tag">AWS</span>
+        <span class="lab-tag">Cloud IAM</span>
+        <span class="lab-tag">Azure</span>
+      </div>
+      <div class="lab-status">
+        <span class="lab-status-dot progress"></span>
+        <span>IN PROGRESS</span>
       </div>
     </div>
 
-  </div>
-</section>
-
-<!-- ── FREELANCE OPERATIONS ── -->
-<section id="services">
-  <div class="section-header reveal">
-    <span class="section-num">04</span>
-    <h2 class="section-title">Freelance <span class="accent-blue">Operations</span></h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div class="about-grid">
-    <div class="about-text reveal">
-      <p>I build web interfaces the way a security professional approaches code — with discipline, intentionality, and zero tolerance for unnecessary complexity. My stack is deliberately native: <strong>HTML5, CSS3, and ES6+ JavaScript</strong>, chosen not out of habit but because clean, framework-free code is faster, more maintainable, and fundamentally more auditable.</p>
-
-      <p>Heavy frameworks ship megabytes of dependencies, expand the attack surface, and introduce supply-chain risk. A handcrafted native codebase means <em>every line has a purpose</em> — no hidden abstractions, no phantom CVEs lurking in a <code>node_modules</code> folder. The same mindset that guides my approach to threat modeling guides my approach to front-end architecture: reduce surface area, eliminate dead weight, and build only what the system actually needs.</p>
-
-      <div class="about-highlight">
-        Every site I deliver is <strong style="color:var(--text-primary)">fully responsive</strong>, semantically correct, and optimised for performance. If it doesn't load fast on a 4G connection and render cleanly on a 320 px viewport, it isn't finished.
+    <div class="lab-card red-lab">
+      <span class="lab-card-badge">🔴 Offensive</span>
+      <h3 class="lab-card-title">Web Application Pentesting</h3>
+      <p class="lab-card-desc">OWASP Top 10 exploitation, API security testing, authentication bypasses, and post-exploitation persistence techniques.</p>
+      <div class="lab-tags">
+        <span class="lab-tag">OWASP</span>
+        <span class="lab-tag">Burp Suite</span>
+        <span class="lab-tag">API Security</span>
       </div>
-
-      <p>Whether you need a sharp landing page, a multi-section portfolio, or a custom interactive component, the output is always the same: precise, performant, and built to last without a framework to maintain.</p>
+      <div class="lab-status">
+        <span class="lab-status-dot active"></span>
+        <span>ACTIVE</span>
+      </div>
     </div>
 
-    <div class="about-stats reveal">
-      <!-- Rates Card -->
-      <div class="stat-card">
-        <div class="stat-card-label">// Pricing</div>
-        <div class="stat-card-value" style="font-size:2rem;">Ksh <span style="color:var(--blue)">7,500</span></div>
-        <div class="stat-card-sub" style="margin-bottom:0.75rem;">Per page — clean, responsive, production-ready.</div>
-        <div style="height:1px; background:var(--border); margin:0.75rem 0;"></div>
-        <div style="font-size:11px; color:var(--text-muted); margin-bottom:0.35rem; letter-spacing:0.08em;">OR</div>
-        <div style="font-family:var(--heading); font-size:1.3rem; font-weight:700; color:var(--text-primary); line-height:1;">Ksh <span style="color:var(--blue)">750</span> <span style="font-size:0.85rem; color:var(--text-muted);">/ hr</span></div>
-        <div class="stat-card-sub">Custom logic, integrations &amp; ongoing maintenance.</div>
+    <div class="lab-card blue-lab">
+      <span class="lab-card-badge">🔵 Defensive</span>
+      <h3 class="lab-card-title">Network Forensics & Analysis</h3>
+      <p class="lab-card-desc">Packet analysis, malware traffic identification, intrusion detection, and evidence collection for incident investigations.</p>
+      <div class="lab-tags">
+        <span class="lab-tag">Wireshark</span>
+        <span class="lab-tag">IDS/IPS</span>
+        <span class="lab-tag">Forensics</span>
       </div>
+      <div class="lab-status">
+        <span class="lab-status-dot active"></span>
+        <span>ACTIVE</span>
+      </div>
+    </div>
 
-      <!-- Tech Stack Card -->
-      <div class="stat-card red">
-        <div class="stat-card-label">// Tech Stack</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-top:0.75rem;">
-          <div class="skill-pill" style="font-size:11px;">
-            <div class="skill-pill-dot red"></div>HTML5
-          </div>
-          <div class="skill-pill" style="font-size:11px;">
-            <div class="skill-pill-dot red"></div>CSS3
-          </div>
-          <div class="skill-pill" style="font-size:11px;">
-            <div class="skill-pill-dot blue"></div>Vanilla JS
-          </div>
-          <div class="skill-pill" style="font-size:11px;">
-            <div class="skill-pill-dot blue"></div>Responsive Design
-          </div>
-        </div>
-        <div style="margin-top:1rem; font-size:10px; color:var(--text-muted); letter-spacing:0.1em; border-top:1px solid var(--border); padding-top:0.75rem;">
-          No frameworks. No bloat. Just precision web craft.
-        </div>
+    <div class="lab-card mix-lab">
+      <span class="lab-card-badge">⚪ Hybrid</span>
+      <h3 class="lab-card-title">Malware Analysis & Reverse Engineering</h3>
+      <p class="lab-card-desc">Static and dynamic malware analysis, binary reverse engineering, threat characterization, and signature development.</p>
+      <div class="lab-tags">
+        <span class="lab-tag">Ghidra</span>
+        <span class="lab-tag">IDA Pro</span>
+        <span class="lab-tag">Cuckoo Sandbox</span>
+      </div>
+      <div class="lab-status">
+        <span class="lab-status-dot planned"></span>
+        <span>PLANNED</span>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ── EXPERIENCE ── -->
-<section id="experience">
-  <div class="section-header reveal">
-    <span class="section-num">05</span>
-    <h2 class="section-title">Experience &amp; <span class="accent-blue">Leadership</span></h2>
+<section id="experience" class="reveal">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Experience & <span class="accent-red">Expertise</span></h2>
     <div class="section-line"></div>
   </div>
 
   <div class="exp-grid">
-    <div class="exp-block reveal">
-      <div class="exp-block-title">Technical Experience</div>
+    <div class="exp-block">
+      <div class="exp-block-title">PROFESSIONAL ROLES</div>
 
       <div class="exp-item">
         <div class="exp-item-top">
-          <div class="exp-item-role">Volunteer IT Head Assistant</div>
-          <div class="exp-item-date">Jan – Jun 2024</div>
+          <h3 class="exp-item-role">Security Researcher</h3>
+          <span class="exp-item-date">2024 - Present</span>
         </div>
-        <div class="exp-item-org">Ushirika Girls Secondary School &nbsp;—&nbsp; <span>Nairobi, KE</span></div>
+        <p class="exp-item-org">Personal Initiative / <span>Open Source</span></p>
         <ul class="exp-bullets">
-          <li>Administered and maintained multimedia equipment including projectors, computers, and networked audiovisual systems across classroom and laboratory environments.</li>
-          <li>Managed student database systems with a focus on data integrity, structured record-keeping, and restricted access protocols.</li>
-          <li>Diagnosed and resolved hardware and software faults, reducing equipment downtime and improving reliability of instructional technology.</li>
-          <li>Coordinated IT operations in collaboration with faculty to support consistent digital learning delivery across the institution.</li>
+          <li>Conducting independent security research on emerging vulnerabilities and attack patterns</li>
+          <li>Contributing to open-source security projects and tooling</li>
+          <li>Publishing analysis and findings on threat landscapes and defense strategies</li>
         </ul>
       </div>
 
-      <!-- ── TECHNICAL SKILLS — split Offensive / Defensive ── -->
-      <div style="margin-top: 1.5rem;">
-        <div class="exp-block-title" style="margin-bottom:1rem;">Technical Skills</div>
-
-        <!-- Offensive -->
-        <div class="skills-category offensive">
-          <div class="skills-category-header offensive">Offensive</div>
-          <div class="skills-grid">
-            <div class="skill-pill"><div class="skill-pill-dot red"></div>Threat Analysis</div>
-            <div class="skill-pill"><div class="skill-pill-dot red"></div>Red Teaming</div>
-            <div class="skill-pill"><div class="skill-pill-dot red"></div>Vulnerability Assessment</div>
-            <div class="skill-pill"><div class="skill-pill-dot red"></div>Machine Learning</div>
-          </div>
+      <div class="exp-item">
+        <div class="exp-item-top">
+          <h3 class="exp-item-role">CTF Competitor</h3>
+          <span class="exp-item-date">2023 - Present</span>
         </div>
-
-        <!-- Defensive -->
-        <div class="skills-category defensive" style="margin-top:1rem;">
-          <div class="skills-category-header defensive">Defensive</div>
-          <div class="skills-grid">
-            <div class="skill-pill"><div class="skill-pill-dot blue"></div>SOC Operations</div>
-            <div class="skill-pill"><div class="skill-pill-dot blue"></div>Blue Teaming</div>
-            <div class="skill-pill"><div class="skill-pill-dot blue"></div>Network Security</div>
-            <div class="skill-pill"><div class="skill-pill-dot blue"></div>Incident Response</div>
-            <div class="skill-pill"><div class="skill-pill-dot blue"></div>Database Administration</div>
-            <div class="skill-pill"><div class="skill-pill-dot blue"></div>Systems Administration</div>
-          </div>
-        </div>
+        <p class="exp-item-org">Multiple Platforms / <span>Competitions</span></p>
+        <ul class="exp-bullets">
+          <li>Participating in Capture-The-Flag competitions (HTB, TryHackMe, Picoctf)</li>
+          <li>Solving challenges across cryptography, web exploitation, and reverse engineering</li>
+          <li>Developing problem-solving skills under pressure and time constraints</li>
+        </ul>
       </div>
     </div>
 
-    <div class="exp-block reveal">
-      <div class="exp-block-title">Mentorship &amp; Advisory</div>
+    <div class="exp-block">
+      <div class="exp-block-title">TECHNICAL EXPERTISE</div>
 
-      <div class="exp-item">
-        <div class="exp-item-top">
-          <div class="exp-item-role">Academic Placement Advisor</div>
-          <div class="exp-item-date">Ongoing</div>
+      <div class="skills-category">
+        <div class="skills-category-header offensive">
+          OFFENSIVE SECURITY
         </div>
-        <div class="exp-item-org">Peer &amp; Prospective University Students &nbsp;—&nbsp; <span>Independent</span></div>
-        <ul class="exp-bullets">
-          <li>Guide peers and prospective university students through the complexity of tertiary academic placements, institution selection, and programme evaluation.</li>
-          <li>Assess entry requirements, admissions criteria, and programme structures across institutions to match candidates with appropriate academic pathways.</li>
-          <li>Format and review professional documentation — including personal statements, application forms, and academic records — for submission-ready quality.</li>
-          <li>Provide structured mentorship drawing on own academic experience, offering frameworks for navigating higher education decision-making.</li>
-        </ul>
+        <div class="skills-grid">
+          <div class="skill-pill">
+            <span class="skill-pill-dot red"></span>
+            Penetration Testing
+          </div>
+          <div class="skill-pill">
+            <span class="skill-pill-dot red"></span>
+            Web Application Testing
+          </div>
+          <div class="skill-pill">
+            <span class="skill-pill-dot red"></span>
+            Active Directory Attacks
+          </div>
+          <div class="skill-pill">
+            <span class="skill-pill-dot red"></span>
+            Exploitation (Metasploit)
+          </div>
+          <div class="skill-pill">
+            <span class="skill-pill-dot red"></span>
+            Kerberos Attacks
+          </div>
+          <div class="skill-pill">
+            <span class="skill-pill-dot red"></span>
+            Privilege Escalation
+          </div>
+        </div>
       </div>
 
-      <div class="exp-item" style="margin-top:1.25rem;">
-        <div class="exp-item-top">
-          <div class="exp-item-role">Educational Leadership</div>
-          <div class="exp-item-date">Continuous</div>
+      <div class="skills-category">
+        <div class="skills-category-header defensive">
+          DEFENSIVE SECURITY
         </div>
-        <div class="exp-item-org">Academic Community &nbsp;—&nbsp; <span>Egerton University</span></div>
-        <ul class="exp-bullets">
-          <li>Committed to the principle that technical excellence is inseparable from the ability to communicate and transfer knowledge effectively.</li>
-          <li>Actively contribute to peer learning environments, establishing a record of knowledge sharing that parallels hands-on technical development.</li>
-        </ul>
+        <div class="skills-grid">
+          <div class="skill-pill">
+            <span class="skill-pill-dot blue"></span>
+            SOC Operations
+          </div>
+          <div class="skill-pill">
+            <span class="skill-pill-dot blue"></span>
+            Threat Analysis
+          </div>
+          <div class="skill-pill">
+            <span class="skill-pill-dot blue"></span>
+            Incident Response
+          </div>
+          <div class="skill-pill">
+            <span class="skill-pill-dot blue"></span>
+            Network Forensics
+          </div>
+          <div class="skill-pill">
+            <span class="skill-pill-dot blue"></span>
+            SIEM Configuration
+          </div>
+          <div class="skill-pill">
+            <span class="skill-pill-dot blue"></span>
+            Malware Analysis
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ── CONTACT ── -->
-<section id="contact">
-  <div class="section-header reveal">
-    <span class="section-num">06</span>
-    <h2 class="section-title">Get in <span class="accent-blue">Touch</span></h2>
+<section id="contact" class="reveal">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Get In <span class="accent-red">Touch</span></h2>
     <div class="section-line"></div>
   </div>
 
   <div class="contact-grid">
-    <div class="contact-info reveal">
-      <p class="contact-desc">Available for internships, research collaboration, and security-focused opportunities. Equally open to conversations about cybersecurity, competitive academia, and the evolving threat landscape.</p>
+    <div class="contact-info">
+      <p class="contact-desc">
+        I'm always open to discussing new opportunities, collaborations, and security challenges. Whether you're looking for a security professional, a fellow researcher, or someone to partner with on a project—reach out. I'm here to help.
+      </p>
 
-      <a href="https://wa.me/254726855096?text=Hi%20Alex,%20I%20am%20reaching%20out%20from%20your%20portfolio." class="contact-link-item" target="_blank">
-        <span class="contact-link-icon">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        </span>
+      <a href="tel:+254769772211" class="contact-link-item">
+        <span class="contact-link-icon">☎</span>
+        +254 769 772 211
+      </a>
+
+      <a href="https://wa.me/254769772211?text=Hello%20Alex%21%20I%27d%20like%20to%20connect%20regarding%20security%20opportunities." target="_blank" class="contact-link-item">
+        <span class="contact-link-icon">💬</span>
         Message on WhatsApp
       </a>
+
       <a href="mailto:asumaalex346@gmail.com?subject=Portfolio%20Inquiry" class="contact-link-item">
         <span class="contact-link-icon">✉</span>
         asumaalex346@gmail.com
       </a>
+
       <a href="https://github.com/Beastalex" target="_blank" class="contact-link-item">
         <span class="contact-link-icon">⌥</span>
         github.com/Beastalex
       </a>
+
       <a href="https://www.linkedin.com/in/alex-asuma-903444340" target="_blank" class="contact-link-item">
         <span class="contact-link-icon">◈</span>
         linkedin.com/in/alex-asuma-903444340
+      </a>
+
+      <a href="https://www.instagram.com/_asuma.dev/" target="_blank" class="contact-link-item">
+        <span class="contact-link-icon">📷</span>
+        instagram.com/_asuma.dev
       </a>
 
       <div style="margin-top:1rem; padding: 1rem; background:var(--bg-card); border:1px solid var(--border);">
@@ -1667,175 +1641,57 @@ footer {
 </footer>
 
 <!-- ── TERMINAL EASTER EGG ── -->
-<div id="terminal-overlay" role="dialog" aria-modal="true" aria-label="Secure shell terminal">
-  <div id="terminal-window">
-    <div class="terminal-titlebar">
-      <div class="terminal-dot td-red" onclick="closeTerminal()"></div>
-      <div class="terminal-dot td-yellow"></div>
-      <div class="terminal-dot td-green"></div>
-      <span class="terminal-title">// SECURE_SHELL — AAM_TACTICAL v0.9.1</span>
-    </div>
-    <div class="terminal-body" id="terminal-output"></div>
-  </div>
-</div>
-
 <script>
-// ── SCROLL REVEAL ──
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((e) => {
-    if (e.isIntersecting) {
-      setTimeout(() => e.target.classList.add('visible'), 60);
+// Intersection Observer for reveal animations
+const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' };
+const observer = new IntersectionObserver(function(entries) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
     }
   });
-}, { threshold: 0.12 });
+}, observerOptions);
+
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// ── FORM HANDLER — retains custom aesthetic, still submits via native form ──
-function handleFormSubmit(event, btn) {
+// Contact form submission handler
+function handleFormSubmit(event, submitButton) {
   event.preventDefault();
-
-  const form = btn.closest('form');
-
-  btn.textContent = '[ TRANSMITTING... ]';
-  btn.style.borderColor = 'var(--blue)';
-  btn.disabled = true;
-
-  // Build FormData and POST to Formspree (or any endpoint in action attr)
-  fetch(form.action, {
-    method: 'POST',
-    body: new FormData(form),
-    headers: { 'Accept': 'application/json' }
-  })
-  .then(res => {
-    if (res.ok) {
-      btn.textContent = '[ MESSAGE RECEIVED ✓ ]';
-      btn.style.background = 'var(--blue-dim)';
-      btn.style.color = 'var(--blue)';
-      form.reset();
-    } else {
-      btn.textContent = '[ TRANSMISSION FAILED — RETRY ]';
-      btn.style.borderColor = 'var(--red)';
-      btn.style.color = 'var(--red)';
-    }
-  })
-  .catch(() => {
-    btn.textContent = '[ TRANSMISSION FAILED — RETRY ]';
-    btn.style.borderColor = 'var(--red)';
-    btn.style.color = 'var(--red)';
-  })
-  .finally(() => {
-    setTimeout(() => {
-      btn.textContent = '[ TRANSMIT MESSAGE ]';
-      btn.style.background = '';
-      btn.style.color = '';
-      btn.style.borderColor = '';
-      btn.disabled = false;
-    }, 3000);
-  });
-
+  submitButton.classList.add('loading');
+  submitButton.disabled = true;
+  
+  // Simulate processing
+  setTimeout(() => {
+    submitButton.classList.remove('loading');
+    submitButton.disabled = false;
+    alert('Message sent! I'll be in touch soon.');
+  }, 2000);
+  
   return false;
 }
 
-// ── TERMINAL EASTER EGG ──
-const termLines = [
-  { t: 0,    c: 't-dim',   text: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' },
-  { t: 80,   c: 't-dim',   text: 'BIOS v2.4.1 :: POST SEQUENCE INITIATED' },
-  { t: 160,  c: 't-dim',   text: 'Detecting hardware... [████████████░░░░] 75%' },
-  { t: 300,  c: 't-dim',   text: 'Detecting hardware... [████████████████] 100% ✓' },
-  { t: 450,  c: 't-dim',   text: '' },
-  { t: 550,  c: 't-white', text: 'Loading BLACKSITE kernel 6.6.6-tactical...' },
-  { t: 720,  c: 't-blue',  text: '[ OK ] Cryptographic subsystem mounted' },
-  { t: 840,  c: 't-blue',  text: '[ OK ] Steganographic layers initialized' },
-  { t: 960,  c: 't-blue',  text: '[ OK ] Network anonymization stack active' },
-  { t: 1100, c: 't-blue',  text: '[ OK ] Threat intelligence feeds connected' },
-  { t: 1250, c: 't-yellow',text: '[ !! ] Operator identity: RESOLVING...' },
-  { t: 1500, c: 't-yellow',text: '[ !! ] Auth token: ████████████████ VALID' },
-  { t: 1700, c: 't-white', text: '' },
-  { t: 1850, c: 't-dim t-art', text: '  ██╗  ██╗ ██╗██╗     ██╗         ███████╗██╗    ██╗██╗████████╗ ██████╗██╗  ██╗' },
-  { t: 1870, c: 't-dim t-art', text: '  ██║ ██╔╝███║██║     ██║         ██╔════╝██║    ██║██║╚══██╔══╝██╔════╝██║  ██║' },
-  { t: 1890, c: 't-art',       text: '  █████╔╝ ╚██║██║     ██║         ███████╗██║ █╗ ██║██║   ██║   ██║     ███████║' },
-  { t: 1910, c: 't-art',       text: '  ██╔═██╗  ██║██║     ██║         ╚════██║██║███╗██║██║   ██║   ██║     ██╔══██║' },
-  { t: 1930, c: 't-bold',      text: '  ██║  ██╗ ██║███████╗███████╗    ███████║╚███╔███╔╝██║   ██║   ╚██████╗██║  ██║' },
-  { t: 1950, c: 't-dim t-art', text: '  ╚═╝  ╚═╝ ╚═╝╚══════╝╚══════╝    ╚══════╝ ╚══╝╚══╝ ╚═╝   ╚═╝    ╚═════╝╚═╝  ╚═╝' },
-  { t: 2100, c: 't-white', text: '' },
-  { t: 2200, c: 't-dim',   text: '─────────────────────────────────────────────────────────' },
-  { t: 2350, c: 't-bold',  text: '  TACTICAL ALIAS: [K1LL_SWITCH]' },
-  { t: 2550, c: 't-dim',   text: '  OPERATOR: Alex Asuma Makori' },
-  { t: 2700, c: 't-dim',   text: '  CLEARANCE: LEVEL-5 // RESTRICTED' },
-  { t: 2850, c: 't-dim',   text: '  MISSION PROFILE: Threat Elimination / Defense Architecture' },
-  { t: 3050, c: 't-dim',   text: '─────────────────────────────────────────────────────────' },
-  { t: 3200, c: 't-green', text: '' },
-  { t: 3300, c: 't-green', text: '  SYSTEM: All vectors secured. Standing by for instruction.' },
-  { t: 3500, c: 't-white', text: '' },
-  { t: 3600, c: 't-dim',   text: '  root@blacksite:~$' },
-];
-
-let termRunning = false;
-let termTimeouts = [];
-
-function openTerminal() {
-  document.getElementById('terminal-overlay').classList.add('active');
-  if (!termRunning) { termRunning = true; runTerminal(); }
-}
-function closeTerminal() {
-  document.getElementById('terminal-overlay').classList.remove('active');
-}
-document.getElementById('terminal-overlay').addEventListener('click', function(e) {
-  if (e.target === this) closeTerminal();
-});
-
-// ── TERMINAL AUTO-SCROLL — only scrolls if user has NOT manually scrolled up ──
-function runTerminal() {
-  const out = document.getElementById('terminal-output');
-  out.innerHTML = '';
-
-  // Track whether the user has scrolled away from the bottom
-  let userScrolledUp = false;
-  out.addEventListener('scroll', () => {
-    const atBottom = out.scrollHeight - out.scrollTop - out.clientHeight < 24;
-    userScrolledUp = !atBottom;
-  }, { passive: true });
-
-  termLines.forEach(({ t, c, text }) => {
-    const tid = setTimeout(() => {
-      const span = document.createElement('span');
-      span.className = `t-line visible ${c}`;
-      span.textContent = text;
-      out.appendChild(span);
-      out.appendChild(document.createTextNode('\n'));
-
-      // Only auto-scroll if the user hasn't scrolled up manually
-      if (!userScrolledUp) {
-        out.scrollTop = out.scrollHeight;
-      }
-
-      // Add blinking cursor on last line
-      if (t === termLines[termLines.length - 1].t) {
-        const cur = document.createElement('span');
-        cur.className = 'terminal-cursor';
-        out.appendChild(cur);
-      }
-    }, t);
-    termTimeouts.push(tid);
-  });
-}
-
-document.getElementById('terminal-trigger').addEventListener('click', openTerminal);
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeTerminal();
-});
-
-// ── SUBTLE KONAMI CODE EASTER EGG FOR TERMINAL ──
-let konamiBuffer = [];
-const konamiCode = [38,38,40,40,37,39,37,39,66,65];
-document.addEventListener('keydown', e => {
-  konamiBuffer.push(e.keyCode);
-  if (konamiBuffer.length > 10) konamiBuffer.shift();
-  if (konamiBuffer.join(',') === konamiCode.join(',')) {
-    openTerminal();
-    konamiBuffer = [];
-  }
+// Terminal Easter Egg
+document.getElementById('terminal-trigger').addEventListener('click', function() {
+  const messages = [
+    'SYS_ACCESS // Authentication required',
+    'Enter credentials: _',
+    '> attempting to bypass firewall...',
+    '> > > connected to mainframe',
+    '> > > > accessing portfolio data...',
+    'Welcome back, Alex. Your terminal is live.'
+  ];
+  
+  let currentMsg = 0;
+  const showMsg = () => {
+    if (currentMsg < messages.length) {
+      console.log(messages[currentMsg]);
+      currentMsg++;
+      setTimeout(showMsg, 300);
+    }
+  };
+  showMsg();
 });
 </script>
+
 </body>
 </html>
